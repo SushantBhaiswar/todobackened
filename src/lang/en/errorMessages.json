@@ -1,0 +1,14 @@
+{
+    "authError": {
+        "emailExist": "Email you are tryig to register is already exist!",
+        "usernameExist": "Username already exist!",
+        "invalidLogin": "Invalid login credeantials! Email not exist.",
+        "invalidPass": "Invalid password"
+    },
+    "userError": {
+        "userNotFound": "user not found it might be deleted"
+    },
+    "adminError": {
+        "userNotFound": "user not found it might be deleted"
+    }
+}
