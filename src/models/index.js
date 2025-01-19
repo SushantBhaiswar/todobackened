@@ -1,3 +1,1 @@
-module.exports.INAPPNOTIFICATIONS = require('./inappnotification.model')
-module.exports.EMAILNOTIFICATIONS = require('./emailnotification.model')
-module.exports.PUSHNOTIFICATIONS = require('./pushnotification.model')
+module.exports.NOTIFICATION = require('./notification.model')

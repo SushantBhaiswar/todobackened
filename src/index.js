@@ -3,7 +3,7 @@ const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 const rabbitmq = require('./rabbitmq')
-const initializeRabbitMQ = require('./rabbitmq')
+const consumer = require('./consumer')
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   logger.info(`Connected to MongoDB : ${config.env}`);
@@ -16,7 +16,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 rabbitmq.initializeRabbitMQ(config)
   .then((res) => {
     logger.info('Connected to RabbitMQ');
-
+    consumer.initializeConsumer()
   })
   .catch((error) => {
     console.log("🚀 ~ error:", error)

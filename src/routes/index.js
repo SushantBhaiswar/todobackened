@@ -9,7 +9,7 @@ const creatRoutes = require('./create');
 
 const serviceRoutes = {
     '/create': creatRoutes,
-    // '/fetch': fetchRoutes,
+    '/fetch': fetchRoutes,
     // '/schdeule': scheduleRoutes,
 };
 

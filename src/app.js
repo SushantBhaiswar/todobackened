@@ -10,9 +10,7 @@ const { authLimiter } = require('./middlewares/rateLimiter.js');
 const routes = require('./routes');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/apiError');
-const utils = require('./utils/helper');
 const app = express();
-const multer = require('multer');
 
 app.set('trust proxy', true)
 
@@ -26,10 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ limit: '0.1kb', extended: true }));
 
 app.use(bodyParser.text({ type: 'text/plain', limit: '50mb' }));
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-app.use(upload.any());
 
 // sanitize request data
 app.use(xss());
@@ -45,9 +39,9 @@ app.options('*', cors());
 
 
 // limit repeated failed requests to auth endpoints
-app.use('/v1', authLimiter);
+app.use('/notifications', authLimiter);
 
-// v1 api routes
+// notifications api routes
 app.use('/notifications', routes);
 
 

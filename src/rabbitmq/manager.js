@@ -1,9 +1,9 @@
 const amqp = require('amqplib');
 const { v4: uuidv4 } = require('uuid');
-const config = require('../config/config')
-const exchanges = require('./store/exchanges')
-const queues = require('./store/queues')
-
+const { getQueuesName } = require('../rabbitmq/store/queues')
+const { getExchangesName } = require('../rabbitmq/store/exchanges')
+const queuesname = getQueuesName('org')
+const exchangesname = getExchangesName('org')
 class RabbitMQManager {
     constructor() {
         this.connection = null;
@@ -72,6 +72,47 @@ class RabbitMQManager {
         return queue;
     }
 
+    async retry(msg, callback, error) {
+        const data = msg.content
+
+        if (!this.channel) await this.connect();
+
+        // Increment retry count
+        const updatedRetryCount = data.retryCount + 1;
+
+        if (updatedRetryCount > 3) {
+            await callback({ ...data, status: 'failed' })
+        } else {
+            // Calculate exponential backoff delay
+            const delay = 1000 * Math.pow(2, updatedRetryCount);
+            data.retryData.push({ retry: updatedRetryCount, reason: error.message })
+            const updatedData = {
+                ...data, retryCount: updatedRetryCount, retriedAt: new Date(),
+
+            }
+            // update db about retry
+            try {
+                await callback(updatedData);
+            } catch (callbackError) {
+                console.error('Callback execution failed:', callbackError);
+            }
+            // Send message to the retry queue with expiration
+            this.channel.publish(
+                exchangesname['retry'],
+                msg.fields.routingKey,
+                Buffer.from(JSON.stringify(updatedData)),
+                {
+                    expiration: delay.toString(),
+                    persistent: true,
+                    messageId: msg.properties.messageId || undefined,
+                    headers: {
+                        'x-delay': delay, 
+                    },
+                }
+            );
+
+        }
+    }
     // Bind queue to exchange
     async bindQueue(queueName, exchangeName, routingKey = '#') {
         if (!this.channel) await this.connect();
@@ -112,7 +153,7 @@ class RabbitMQManager {
         if (!this.channel) await this.connect();
 
         const consumerOptions = {
-            noAck: false,
+            //noAck: false,
             ...options
         };
 
@@ -126,7 +167,8 @@ class RabbitMQManager {
                     const response = await callback({
                         content: parsedContent || content,
                         fields: msg.fields,
-                        properties: msg.properties
+                        properties: msg.properties,
+                        channel: this.channel
                     });
 
                     // Acknowledge message
@@ -134,12 +176,11 @@ class RabbitMQManager {
 
                 } catch (error) {
                     console.error('Message processing error:', error);
-                    // Reject and potentially requeue the message
-                    this.channel.nack(msg, false, true);
                 }
             }
         }, consumerOptions);
     }
+
 
     // RPC (Remote Procedure Call) pattern
     async rpcClient(exchangeName, routingKey, message, timeout = 5000) {
@@ -161,7 +202,7 @@ class RabbitMQManager {
                     resolve(this.tryParseJSON(content) || content);
                     this.channel.ack(msg);
                 }
-            }, { noAck: false });
+            });
 
             // Publish RPC request
             this.channel.publish(
@@ -175,10 +216,10 @@ class RabbitMQManager {
                 }
             );
 
-            // Timeout handling
-            setTimeout(() => {
-                reject(new Error('RPC request timed out'));
-            }, timeout);
+            // // Timeout handling
+            // setTimeout(() => {
+            //     reject(new Error('RPC request timed out'));
+            // }, timeout);
         });
     }
 

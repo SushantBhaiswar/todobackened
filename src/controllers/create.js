@@ -3,17 +3,18 @@ const catchAsync = require('../utils/catchAsync');
 const utility = require('../utils/helper');
 const { getRabbitMQInstance } = require('../rabbitmq/index')
 const { getExchangesName } = require('../rabbitmq/store/exchanges')
-const { getQueuesName } = require('../rabbitmq/store/queues')
+const routingKey = require('../rabbitmq/store/routekey')
 
 const conditionalNotification = catchAsync(async (req, res) => {
     const rabbitMQInstance = await getRabbitMQInstance();
-    console.log("log", getExchangesName('sendnotifications'))
-    rabbitMQInstance.rpcClient(getExchangesName('sendnotifications'),'')
-    // publish message to exchange 
+    // make rpc request 
+    const response = await rabbitMQInstance.rpcClient(getExchangesName('apicalls'), routingKey.createNotification, JSON.stringify({ ...req.body }))
+
     res.sendJSONResponse({
         code: httpStatus.OK,
         status: true,
         message: 'ok',
+        data: response
     });
 })
 

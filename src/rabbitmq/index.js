@@ -2,7 +2,6 @@
 const logger = require('../config/logger');
 const { RabbitMQManager } = require('./manager');
 const RabbitMQInitializer = require('./initializer');
-
 let rabbitMQInstance = null;
 
 const initializeRabbitMQ = async (config) => {

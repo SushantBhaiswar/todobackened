@@ -1,5 +1,4 @@
 const { exchanges } = require('./store/exchanges');
-
 const { queues } = require('./store/queues');
 const { bindExcAndQue } = require('./store/binding');
 

@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const schemaNames = require('../config/schemaNames');
 
-const emailnotification = mongoose.Schema({
+const notification = mongoose.Schema({
     userId: {
         type: String,
         required: true,
@@ -19,23 +18,29 @@ const emailnotification = mongoose.Schema({
         default: 'processing',
         index: true
     },
+    channel: {
+        type: String,
+        enum: ['email', 'SMS', 'push'],
+        index: true
+    },
     retryCount: {
         type: Number,
         default: 0
     },
-    retriedAt: {
-        type: Date
-    }
-
+    retryData: [{
+        count: { type: String },
+        reason: { type: String },
+        retriedAt: { type: Date }
+    }]
 },
     {
         timestamps: true,
     }
 );
 
-emailnotification.index({ userId: 1, status: 1 });
-emailnotification.index({ createdAt: -1, status: 1 });
+notification.index({ userId: 1, status: 1 });
+notification.index({ createdAt: -1, status: 1 });
 
-const Emailnotifications = mongoose.model(schemaNames.EMAILNOTIFICATION, emailnotification);
+const notifications = mongoose.model(schemaNames.NOTIFICATION, notification);
 
-module.exports = Emailnotifications;
+module.exports = notifications;

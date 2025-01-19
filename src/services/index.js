@@ -1,3 +1,2 @@
-module.exports.emailservice = require('./emailservice');
-module.exports.inappservice = require('./inappservice');
-module.exports.pushservice = require('./pushservice');
+module.exports.notificationService = require('./notificationService');
+module.exports.fetchService = require('./fetchService');
