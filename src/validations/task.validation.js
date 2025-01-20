@@ -15,6 +15,7 @@ const fetchTask = {
         cursor: Joi.string(),
         search: Joi.string(),
         limit: Joi.number(),
+        filter: Joi.string().valid('today', 'pending', 'completed'),
     }),
 };
 
@@ -39,10 +40,19 @@ const updateTask = {
     }),
 };
 
+const completeTask = {
+
+    params: Joi.object().keys({
+        taskId: Joi.string(),
+
+    }),
+};
+
 
 module.exports = {
     createTask,
     fetchTask,
     deleteTask,
-    updateTask
+    updateTask,
+    completeTask
 }

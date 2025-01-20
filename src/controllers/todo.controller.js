@@ -23,7 +23,6 @@ const fetchTask = catchAsync(async (req, res) => {
 
     // make rpc request 
     const { response } = await rabbitMQInstance.rpcClient(getExchangesName('apicalls'), routingKey.fetchTask, JSON.stringify({ ...req.body })) || {}
-    console.log("🚀 ~ fetchTask ~ response:", response)
 
     res.sendJSONResponse({
         code: httpStatus.OK,
@@ -46,6 +45,19 @@ const updateTask = catchAsync(async (req, res) => {
     });
 })
 
+const completeTask = catchAsync(async (req, res) => {
+    const rabbitMQInstance = await getRabbitMQInstance();
+    console.log("reached")
+    // make rpc request 
+    const response = await rabbitMQInstance.rpcClient(getExchangesName('apicalls'), routingKey.completeTask, JSON.stringify({ taskId: req.params.taskId }))
+
+    res.sendJSONResponse({
+        code: httpStatus.OK,
+        status: true,
+        message: 'Task completed successfully',
+    });
+})
+
 const deleteTask = catchAsync(async (req, res) => {
     const rabbitMQInstance = await getRabbitMQInstance();
 
@@ -63,5 +75,6 @@ module.exports = {
     createTask,
     fetchTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    completeTask
 }

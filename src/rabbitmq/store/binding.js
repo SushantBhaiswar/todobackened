@@ -20,6 +20,11 @@ const bindExcAndQue = [
         routingkey: routingkey.updateTask
     },
     {
+        queueName: getQueuesName()?.['completeTask'],
+        exchangeName: getExchangesName()?.['apicalls'],
+        routingkey: routingkey.completeTask
+    },
+    {
         queueName: getQueuesName()?.['deleteTask'],
         exchangeName: getExchangesName()?.['apicalls'],
         routingkey: routingkey.deleteTask

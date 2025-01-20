@@ -10,6 +10,9 @@ const queues = [
         name: `updateTask-que`
     },
     {
+        name: `completeTask-que`
+    },
+    {
         name: `fetchTask-que`
     }
 

@@ -79,6 +79,24 @@ const consumeMessages = async () => {
                 console.error('Error processing message:', processingError);
             }
         });
+
+        // conumer to complete task
+        rabbitMQInstance.consume(queue['completeTask'], async (msg) => {
+            const request = JSON.parse(msg.content.toString());
+            try {
+                await taskServices.completeTask(request)
+
+                // Send the response back to the reply queue
+                msg.channel.sendToQueue(
+                    msg.properties.replyTo,
+                    Buffer.from(JSON.stringify({ message: 'Task completed' })),
+                    { correlationId: msg.properties.correlationId }
+                );
+
+            } catch (processingError) {
+                console.error('Error processing message:', processingError);
+            }
+        });
     } catch (error) {
         console.error('Error in consumeMessages:', error);
         throw error;

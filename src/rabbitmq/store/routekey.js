@@ -3,6 +3,7 @@ const routingkey = {
     updateTask: 'updateTask',
     deleteTask: 'deleteTask',
     createTask: 'createTask',
+    completeTask: 'completeTask',
 }
 
 module.exports = routingkey

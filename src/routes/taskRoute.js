@@ -17,6 +17,7 @@ router
     .route('/:taskId')
     .delete(validate(taskValidation.deleteTask), todoController.deleteTask)
     .put(validate(taskValidation.updateTask), todoController.updateTask)
+    .patch(validate(taskValidation.completeTask), todoController.completeTask)
 
 
 
