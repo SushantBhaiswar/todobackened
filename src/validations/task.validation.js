@@ -15,7 +15,7 @@ const fetchTask = {
         cursor: Joi.string(),
         search: Joi.string(),
         limit: Joi.number(),
-        filter: Joi.string().valid('today', 'pending', 'completed'),
+        filter: Joi.string().valid('today', 'pending', 'completed', 'all'),
     }),
 };
 

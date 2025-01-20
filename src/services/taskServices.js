@@ -30,7 +30,7 @@ const fetchTasks = async (request) => {
         }
     ]
     // apply filter
-    if (filter) {
+    if (filter != 'all') {
 
         if (filter == 'today') {
             basePipeline.push({
