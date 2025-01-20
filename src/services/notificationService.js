@@ -7,7 +7,6 @@ const createNotification = async (request) => {
 }
 
 const updateNotification = async (request) => {
-    console.log("🚀 ~ updateNotification ~ request:", request)
 
     const updatedRecord = await db.NOTIFICATION.findByIdAndUpdate(
         request._id,

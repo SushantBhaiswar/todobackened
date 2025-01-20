@@ -20,7 +20,7 @@ const fetchAllNotification = {
     body: Joi.object().keys({
         userId: Joi.string().required(),
         cursor: Joi.string(),
-        limit: Joi.string(),
+        limit: Joi.number(),
     }),
 };
 

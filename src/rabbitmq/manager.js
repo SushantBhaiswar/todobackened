@@ -106,7 +106,7 @@ class RabbitMQManager {
                     persistent: true,
                     messageId: msg.properties.messageId || undefined,
                     headers: {
-                        'x-delay': delay, 
+                        'x-delay': delay,
                     },
                 }
             );
@@ -184,7 +184,6 @@ class RabbitMQManager {
 
     // RPC (Remote Procedure Call) pattern
     async rpcClient(exchangeName, routingKey, message, timeout = 5000) {
-        console.log('reached')
         if (!this.channel) await this.connect();
 
         // Create a temporary queue for responses

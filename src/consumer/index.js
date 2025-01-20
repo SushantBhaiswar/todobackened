@@ -7,7 +7,6 @@ const initializeConsumer = async () => {
         await create.consumeMessages();
         await notification.consumeMessages();
         await fetch.consumeMessages();
-        console.log('Consumer initialized and waiting for messages...');
     } catch (error) {
         console.error('Error initializing the consumer:', error);
     }

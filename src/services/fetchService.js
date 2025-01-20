@@ -1,4 +1,4 @@
-const { mongoose } = require('../config/config')
+const mongoose = require('mongoose')
 const db = require('../models')
 
 const fetchNotificationById = async (notificationId) => {
@@ -18,13 +18,13 @@ const fetchAllNotification = async (request) => {
     // Add cursor 
     if (cursor) {
         const [cursorDate, cursorId] = cursor.split('_');
-        pipeline.push({
+        basePipeline.push({
             $match: {
                 $or: [
-                    { createdAt: { $lt: new Date(cursorDate) } },
+                    { createdAt: { $lte: new Date(cursorDate) } },
                     {
                         createdAt: new Date(cursorDate),
-                        _id: { $lt: mongoose.Types.ObjectId(cursorId) },
+                        _id: { $lte: new mongoose.Types.ObjectId(cursorId) },
                     },
                 ],
             },
@@ -36,14 +36,15 @@ const fetchAllNotification = async (request) => {
         $sort: { createdAt: -1, _id: -1 },
     },)
 
-    // ad limit
+    // ads limit
     basePipeline.push({ $limit: limit + 1 });
 
 
     const notifications = await db.NOTIFICATION.aggregate(basePipeline)
 
+    // find next cursor
     const lastNotification =
-        notifications.length > 0
+        notifications.length > limit
             ? notifications[notifications.length - 1]
             : null;
 
@@ -51,6 +52,9 @@ const fetchAllNotification = async (request) => {
         ? `${lastNotification.createdAt.toISOString()}_${lastNotification._id}`
         : null;
 
+
+    // remove extra notification if fetched
+    if (notifications.length > limit) notifications.pop()
     return {
         data: notifications,
         nextCursor,
