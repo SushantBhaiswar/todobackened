@@ -10,7 +10,6 @@ dotenv.config({ path: path.join(__dirname, `../../${'.env'}`) });
 const envVarsSchema = Joi.object()
     .keys({
         NODE_ENV: Joi.string().required(),
-        SERVICE: Joi.string().required(),
         PORT: Joi.number().default(4000),
         MONGODB_URL: Joi.string().required(),
     })
@@ -28,7 +27,6 @@ if (error) {
 module.exports = {
     env: envVars.NODE_ENV,
     port: envVars.PORT,
-    service: envVars.SERVICE,
     verifyEmailExpirationMinutes: envVars.EMAIL_VERIFY_OTP_EXPIRATION_MINUTES,
     mongoose: {
         url: envVars.MONGODB_URL,

@@ -1,16 +1,11 @@
 const express = require('express');
 
 const router = express.Router();
-
-const fetchRoutes = require('./fetch');
-const scheduleRoutes = require('./schedule');
-const creatRoutes = require('./create');
+const taskRoutes = require('./taskRoute');
 
 
 const serviceRoutes = {
-    '/create': creatRoutes,
-    '/fetch': fetchRoutes,
-    // '/schdeule': scheduleRoutes,
+    '/task': taskRoutes,
 };
 
 Object.keys(serviceRoutes).forEach((route) => {

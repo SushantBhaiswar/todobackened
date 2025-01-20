@@ -1,12 +1,8 @@
-const create = require('./create')
-const notification = require('./notification')
-const fetch = require('./fetch')
+const tasks = require('./task')
 
 const initializeConsumer = async () => {
     try {
-        await create.consumeMessages();
-        await notification.consumeMessages();
-        await fetch.consumeMessages();
+        await tasks.consumeMessages();
     } catch (error) {
         console.error('Error initializing the consumer:', error);
     }

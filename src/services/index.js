@@ -1,2 +1,1 @@
-module.exports.notificationService = require('./notificationService');
-module.exports.fetchService = require('./fetchService');
+module.exports.taskServices = require('./taskServices');

@@ -1,13 +1,22 @@
 const mongoose = require('mongoose')
 const db = require('../models')
 
-const fetchNotificationById = async (notificationId) => {
-    console.log("🚀 ~ fetchNotificationById ~ notificationId:", notificationId)
-    const foundRecord = await db.NOTIFICATION.findOne({ _id: notificationId }).lean()
-    return foundRecord
+const createTask = async (request) => {
+    const createdRecord = await db.TASK.create(request)
+    return JSON.parse(JSON.stringify(createdRecord))
 }
 
-const fetchAllNotification = async (request) => {
+const updateTask = async (request) => {
+    const createdRecord = await db.TASK.updateOne({ _id: request.taskId }, { $set: { ...request } })
+    return JSON.parse(JSON.stringify(createdRecord))
+}
+
+const deleteTask = async (request) => {
+    const createdRecord = await db.TASK.deleteOne({ _id: request.taskId })
+    return JSON.parse(JSON.stringify(createdRecord))
+}
+
+const fetchTasks = async (request) => {
     const { userId, cursor, limit = 10 } = request;
 
     const basePipeline = [
@@ -40,7 +49,7 @@ const fetchAllNotification = async (request) => {
     basePipeline.push({ $limit: limit + 1 });
 
 
-    const notifications = await db.NOTIFICATION.aggregate(basePipeline)
+    const notifications = await db.TASK.aggregate(basePipeline)
 
     // find next cursor
     const lastNotification =
@@ -63,6 +72,8 @@ const fetchAllNotification = async (request) => {
 
 
 module.exports = {
-    fetchNotificationById,
-    fetchAllNotification
+    createTask,
+    updateTask,
+    fetchTasks,
+    deleteTask
 }

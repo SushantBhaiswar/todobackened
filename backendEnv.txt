@@ -1,0 +1,7 @@
+# Port number
+PORT=3001
+NODE_ENV = 'assignment'
+SERVICE = 'notifications'
+
+# URL of the Mongo DB
+MONGODB_URL= 'mongodb+srv://sushantbhaiswar:h6uWXmgH6NS1O5qS@cluster0.mlv02ng.mongodb.net/medlocum-test'

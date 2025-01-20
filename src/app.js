@@ -42,7 +42,7 @@ app.options('*', cors());
 app.use('/notifications', authLimiter);
 
 // notifications api routes
-app.use('/notifications', routes);
+app.use('/v1', routes);
 
 
 // send back a 404 error for any unknown api request

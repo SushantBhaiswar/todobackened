@@ -1,1 +1,1 @@
-module.exports.notificationValidation = require('./notification.validation')
+module.exports.taskValidation = require('./task.validation')

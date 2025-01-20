@@ -1,1 +1,1 @@
-module.exports.NOTIFICATION = require('./notification.model')
+module.exports.TASK = require('./taskModel')

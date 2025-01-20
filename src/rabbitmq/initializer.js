@@ -50,7 +50,7 @@ class RabbitMQInitializer {
   }
 
   formatName(name) {
-    return `${this.config.env}-${this.config.service}-${name}`;
+    return `${this.config.env}-${name}`;
   }
 }
 

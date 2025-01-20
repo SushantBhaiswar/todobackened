@@ -1,12 +1,8 @@
 const routingkey = {
-    log: 'log',
-    email: 'email',
-    push: 'push',
-    fetchNotification: 'fetchNotification',
-    createNotification: 'createNotification',
-    fetchAllNotification: 'fetchAllNotification',
-    wait: 'wait',
-    sms: 'sms',
+    fetchTask: 'fetchTask',
+    updateTask: 'updateTask',
+    deleteTask: 'deleteTask',
+    createTask: 'createTask',
 }
 
 module.exports = routingkey
