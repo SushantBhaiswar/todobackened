@@ -26,11 +26,11 @@ const fetchTasks = async (request) => {
 
     const basePipeline = [
         {
-            $match: { userId }
+            $match: {}
         }
     ]
     // apply filter
-    if (filter != 'all') {
+    if (filter && filter != 'all') {
 
         if (filter == 'today') {
             basePipeline.push({
@@ -80,6 +80,7 @@ const fetchTasks = async (request) => {
 
     // add limit
     basePipeline.push({ $limit: limit + 1 });
+
 
 
     const notifications = await db.TASK.aggregate(basePipeline)
