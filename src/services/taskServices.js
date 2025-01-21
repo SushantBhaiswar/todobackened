@@ -78,29 +78,45 @@ const fetchTasks = async (request) => {
         $sort: { createdAt: -1, _id: -1 },
     },)
 
+    let tasksCountPipeline = []
+    let tasksPipeline = []
+
+    // count filtered document
+    tasksPipeline.push({ $count: "size" })
+
     // add limit
-    basePipeline.push({ $limit: limit + 1 });
+    tasksPipeline.push({ $limit: limit + 1 });
 
+    // add facet for paralle processing
+    basePipeline.push({ $facet: { tasksCount: tasksCountPipeline, tasks: tasksPipeline } })
 
+    const mainProject = {
+        $project: {
+            tasksCount: { $arrayElemAt: ['$docCount.size', 0] }
+        }
+    }
+    // final project
+    basePipeline.push(mainProject)
 
-    const notifications = await db.TASK.aggregate(basePipeline)
+    let { tasksCount, tasks } = await db.TASK.aggregate(basePipeline) || {}
 
     // find next cursor
-    const lastNotification =
-        notifications.length > limit
-            ? notifications[notifications.length - 1]
+    const lastTask =
+        tasks.length > limit
+            ? tasks[tasks.length - 1]
             : null;
 
-    const nextCursor = lastNotification
-        ? `${lastNotification.createdAt.toISOString()}_${lastNotification._id}`
+    const nextCursor = lastTask
+        ? `${lastTask.createdAt.toISOString()}_${lastTask._id}`
         : null;
 
 
     // remove extra notification if fetched
-    if (notifications.length > limit) notifications.pop()
+    if (tasks.length > limit) tasks.pop()
     return {
-        data: notifications,
+        data: tasks,
         nextCursor,
+        totalCount: tasksCount
     }
 }
 
